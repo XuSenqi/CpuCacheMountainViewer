@@ -75,11 +75,43 @@ void init_data(int *data, int n)
 //	result += data[i];
 //    sink = result; /* So compiler doesn't optimize away the loop */
 //}
+//
+
+
+/* test - Iterate over first "elems" elements of array "data" with
+ *        stride of "stride", using 4x4 loop unrolling.
+ */
+/*
+void test(int elems, int stride)
+{
+    long i, sx2 = stride*2, sx3 = stride*3, sx4 = stride*4;
+
+    long sum;
+    long acc0 = 0, acc1 = 0, acc2 = 0, acc3 = 0;
+    long length = elems;
+    long limit = length - sx4;
+
+    // Combine 4 elements at a time
+    for (i = 0; i < limit; i += sx4) {
+        acc0 = acc0 + data[i];
+        acc1 = acc1 + data[i+stride];
+        acc2 = acc2 + data[i+sx2];
+        acc3 = acc3 + data[i+sx3];
+    }
+
+    // Finish any remaining elements
+    for (; i < length; i += stride) {
+        acc0 = acc0 + data[i];
+    }
+    sum=((acc0 + acc1) + (acc2 + acc3));
+}
+*/
 
 /* $begin mountainfuns */
 /* test - Iterate over first "elems" elements of array "data" with
  *        stride of "stride", using 32x32 loop unrolling.
  */
+
 void test(int elems, int stride)
 {
     long i, sx2 = stride*2, sx3 = stride*3, sx4 = stride*4;
@@ -101,9 +133,9 @@ void test(int elems, int stride)
     long acc24 = 0, acc25 = 0, acc26 = 0, acc27 = 0;
     long acc28 = 0, acc29 = 0, acc30 = 0, acc31 = 0;
     long length = elems;
-    long limit = length - sx4;
+    long limit = length - sx32;
 
-    /* Combine 32 elements at a time */
+    // Combine 32 elements at a time
     for (i = 0; i < limit; i += sx32) {
         acc0 = acc0 + data[i];
         acc1 = acc1 + data[i+stride];
@@ -139,7 +171,7 @@ void test(int elems, int stride)
         acc31 = acc31 + data[i+sx31];
     }
 
-    /* Finish any remaining elements */
+    //Finish any remaining elements
     for (; i < length; i += stride) {
         acc0 = acc0 + data[i];
     }
